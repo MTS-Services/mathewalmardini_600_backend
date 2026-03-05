@@ -1,44 +1,67 @@
-const consultationService = require('../services/consultationService');
+const consultationService = require("../services/consultationService");
 
 class ConsultationController {
   async bookConsultation(req, res) {
-    console.log('\n===== New Consultation Booking Request =====');
-    console.log('Request Body:', JSON.stringify(req.body, null, 2));
-    console.log('Request Headers:', req.headers);
-    console.log('==========================================\n');
+    console.log("\n===== New Consultation Booking Request =====");
+    console.log("Request Body:", JSON.stringify(req.body, null, 2));
+    console.log("Request Headers:", req.headers);
+    console.log("==========================================\n");
 
     try {
-      const { name, email, phone, company, postcode, propertyType, service, budget, message, preferredDate, preferredTime, timeline, timelineDetails } = req.body;
+      const {
+        name,
+        email,
+        phone,
+        company,
+        postcode,
+        propertyType,
+        service,
+        budget,
+        message,
+        preferredDate,
+        preferredTime,
+        timeline,
+        timelineDetails,
+      } = req.body;
 
       // Validate required fields (postcode, propertyType, timeline, timelineDetails, and message are optional)
-      if (!name || !email || !phone || !company || !service || !budget || !preferredTime) {
-        console.log('Validation Failed: Missing required fields');
-        console.log('Name:', name);
-        console.log('Email:', email);
-        console.log('Phone:', phone);
-        console.log('Company:', company);
-        console.log('Service:', service);
-        console.log('Budget:', budget);
-        console.log('Preferred Time:', preferredTime);
-        
+      if (
+        !name ||
+        !email ||
+        !phone ||
+        !company ||
+        !service ||
+        !budget ||
+        !preferredTime
+      ) {
+        console.log("Validation Failed: Missing required fields");
+        console.log("Name:", name);
+        console.log("Email:", email);
+        console.log("Phone:", phone);
+        console.log("Company:", company);
+        console.log("Service:", service);
+        console.log("Budget:", budget);
+        console.log("Preferred Time:", preferredTime);
+
         return res.status(400).json({
           success: false,
-          message: 'All fields are required: name, email, phone, company, service, budget, and preferredTime'
+          message:
+            "All fields are required: name, email, phone, company, service, budget, and preferredTime",
         });
       }
 
       // Basic email validation
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       if (!emailRegex.test(email)) {
-        console.log('Validation Failed: Invalid email format');
-        
+        console.log("Validation Failed: Invalid email format");
+
         return res.status(400).json({
           success: false,
-          message: 'Invalid email format'
+          message: "Invalid email format",
         });
       }
 
-      console.log('Validation passed. Preparing to send confirmation email...');
+      console.log("Validation passed. Preparing to send confirmation email...");
 
       // Prepare form data
       const formData = {
@@ -46,76 +69,83 @@ class ConsultationController {
         email,
         phone,
         company,
-        postcode: postcode || '',
-        propertyType: propertyType || '',
+        postcode: postcode || "",
+        propertyType: propertyType || "",
         service,
         budget,
-        message: message || '',
-        preferredDate: preferredDate || '',
+        message: message || "",
+        preferredDate: preferredDate || "",
         preferredTime,
-        timeline: timeline || '',
-        timelineDetails: timelineDetails || ''
+        timeline: timeline || "",
+        timelineDetails: timelineDetails || "",
       };
 
-      console.log('Form data prepared:', formData);
+      console.log("Form data prepared:", formData);
 
       // Step 1: Generate token and store consultation
-      console.log('\n--- Step 1: Generate Token ---');
+      console.log("\n--- Step 1: Generate Token ---");
       const token = consultationService.generateToken();
       consultationService.storeConsultation(token, formData);
 
       // Step 2: Create confirmation link (direct to backend API)
-      const backendUrl = process.env.BACKEND_URL || 'http://localhost:3000';
+      const backendUrl = process.env.BACKEND_URL;
       const confirmLink = `${backendUrl}/api/confirm/${token}`;
-      console.log('Confirmation link:', confirmLink);
+      console.log("Confirmation link:", confirmLink);
 
       // Step 3: Send confirmation email to user
-      console.log('\n--- Step 2: Send Confirmation Email to User ---');
-      const emailResult = await consultationService.sendConfirmationEmail(formData, confirmLink);
+      console.log("\n--- Step 2: Send Confirmation Email to User ---");
+      const emailResult = await consultationService.sendConfirmationEmail(
+        formData,
+        confirmLink,
+      );
 
-      console.log('Consultation controller: Confirmation email sent to user');
-      console.log('\n===== RESPONSE DEBUG =====');
-      console.log('token variable:', typeof token);
-      console.log('token length:', token?.length);
-      console.log('token value:', token);
-      console.log('confirmLink:', confirmLink);
-      console.log('========================\n');
-      
+      console.log("Consultation controller: Confirmation email sent to user");
+      console.log("\n===== RESPONSE DEBUG =====");
+      console.log("token variable:", typeof token);
+      console.log("token length:", token?.length);
+      console.log("token value:", token);
+      console.log("confirmLink:", confirmLink);
+      console.log("========================\n");
+
       const responseData = {
         success: true,
-        message: 'Confirmation email sent! Please check your inbox and click the confirmation link.',
+        message:
+          "Confirmation email sent! Please check your inbox and click the confirmation link.",
         step: 1,
         data: {
           token: token,
           confirmLink: confirmLink,
-          userEmail: email
-        }
+          userEmail: email,
+        },
       };
-      
-      console.log('About to send response:', JSON.stringify(responseData, null, 2));
+
+      console.log(
+        "About to send response:",
+        JSON.stringify(responseData, null, 2),
+      );
       res.status(200).json(responseData);
     } catch (error) {
-      console.error('Consultation controller error:', error.message);
-      console.error('Stack trace:', error.stack);
-      
+      console.error("Consultation controller error:", error.message);
+      console.error("Stack trace:", error.stack);
+
       res.status(500).json({
         success: false,
-        message: 'Failed to process consultation request',
-        error: error.message
+        message: "Failed to process consultation request",
+        error: error.message,
       });
     }
   }
 
   async confirmConsultation(req, res) {
-    console.log('\n===== Confirming Consultation =====');
-    console.log('Token:', req.params.token.substring(0, 10) + '...');
-    console.log('====================================\n');
+    console.log("\n===== Confirming Consultation =====");
+    console.log("Token:", req.params.token.substring(0, 10) + "...");
+    console.log("====================================\n");
 
     try {
       const { token } = req.params;
 
       if (!token) {
-        console.log('❌ No token provided');
+        console.log("❌ No token provided");
         return res.status(400).send(`
           <!DOCTYPE html>
           <html>
@@ -141,11 +171,11 @@ class ConsultationController {
       }
 
       // Step 1: Get consultation by token
-      console.log('--- Step 1: Retrieving Consultation ---');
+      console.log("--- Step 1: Retrieving Consultation ---");
       const consultation = consultationService.getConsultation(token);
 
       if (!consultation) {
-        console.log('❌ Invalid or expired token');
+        console.log("❌ Invalid or expired token");
         return res.status(400).send(`
           <!DOCTYPE html>
           <html>
@@ -173,11 +203,11 @@ class ConsultationController {
       }
 
       // Step 2: Confirm the consultation
-      console.log('--- Step 2: Marking as Confirmed ---');
+      console.log("--- Step 2: Marking as Confirmed ---");
       const confirmed = consultationService.confirmConsultation(token);
 
       if (!confirmed) {
-        console.log('❌ Failed to confirm');
+        console.log("❌ Failed to confirm");
         return res.status(400).send(`
           <!DOCTYPE html>
           <html>
@@ -203,17 +233,21 @@ class ConsultationController {
       }
 
       // Step 3: Send email to admin (in background - don't await)
-      console.log('\n--- Step 3: Sending to Admin ---');
-      consultationService.sendConsultationToAdmin(consultation)
+      console.log("\n--- Step 3: Sending to Admin ---");
+      consultationService
+        .sendConsultationToAdmin(consultation)
         .then(() => {
-          console.log('✅ Admin email sent successfully!');
+          console.log("✅ Admin email sent successfully!");
         })
         .catch((error) => {
-          console.error('⚠️ Failed to send admin email (but consultation confirmed):', error.message);
+          console.error(
+            "⚠️ Failed to send admin email (but consultation confirmed):",
+            error.message,
+          );
         });
 
-      console.log('✅ Consultation confirmed!');
-      
+      console.log("✅ Consultation confirmed!");
+
       // Return HTML success page (not JSON)
       return res.status(200).send(`
         <!DOCTYPE html>
@@ -256,9 +290,9 @@ class ConsultationController {
         </html>
       `);
     } catch (error) {
-      console.error('Confirm consultation error:', error.message);
-      console.error('Stack trace:', error.stack);
-      
+      console.error("Confirm consultation error:", error.message);
+      console.error("Stack trace:", error.stack);
+
       return res.status(500).send(`
         <!DOCTYPE html>
         <html>
