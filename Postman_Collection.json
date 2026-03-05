@@ -1,0 +1,500 @@
+{
+  "info": {
+    "name": "Consultation Booking Server - Two Step Flow",
+    "description": "API collection for testing the two-step consultation booking process with all required fields",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "STEP 1 - Book Consultation (Submit Form)",
+      "item": [
+        {
+          "name": "[PASS] Valid Submission - All Fields",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Success message returned\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.success).to.eql(true);",
+                  "});",
+                  "",
+                  "pm.test(\"Token is generated\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.data.token).to.exist;",
+                  "    pm.environment.set(\"confirmation_token\", jsonData.data.token);",
+                  "});",
+                  "",
+                  "console.log(\"Token:\", pm.environment.get(\"confirmation_token\"));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"name\": \"John Doe\", \"email\": \"john.doe@example.com\", \"phone\": \"+1 (555) 123-4567\", \"company\": \"Tech Solutions Inc\", \"service\": \"Web Development\", \"budget\": \"5000-10000\", \"message\": \"We need a website\", \"preferredDate\": \"2026-03-20\", \"preferredTime\": \"2:00 PM\"}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/book-consultation",
+              "host": ["{{base_url}}"],
+              "path": ["api", "book-consultation"]
+            }
+          }
+        },
+        {
+          "name": "[FAIL] Missing Name",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"email\": \"test@example.com\", \"phone\": \"+1 (555) 123-4567\", \"company\": \"Tech Solutions\", \"service\": \"Web Development\", \"budget\": \"5000-10000\", \"message\": \"Need website\", \"preferredDate\": \"2026-03-20\", \"preferredTime\": \"2:00 PM\"}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/book-consultation",
+              "host": ["{{base_url}}"],
+              "path": ["api", "book-consultation"]
+            }
+          }
+        },
+        {
+          "name": "[FAIL] Missing Email",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"name\": \"Test User\", \"phone\": \"+1 (555) 123-4567\", \"company\": \"Tech Solutions\", \"service\": \"Web Development\", \"budget\": \"5000-10000\", \"message\": \"Need website\", \"preferredDate\": \"2026-03-20\", \"preferredTime\": \"2:00 PM\"}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/book-consultation",
+              "host": ["{{base_url}}"],
+              "path": ["api", "book-consultation"]
+            }
+          }
+        },
+        {
+          "name": "[FAIL] Missing Phone",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"name\": \"Test User\", \"email\": \"test@example.com\", \"company\": \"Tech Solutions\", \"service\": \"Web Development\", \"budget\": \"5000-10000\", \"message\": \"Need website\", \"preferredDate\": \"2026-03-20\", \"preferredTime\": \"2:00 PM\"}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/book-consultation",
+              "host": ["{{base_url}}"],
+              "path": ["api", "book-consultation"]
+            }
+          }
+        },
+        {
+          "name": "[FAIL] Missing Company",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"name\": \"Test User\", \"email\": \"test@example.com\", \"phone\": \"+1 (555) 123-4567\", \"service\": \"Web Development\", \"budget\": \"5000-10000\", \"message\": \"Need website\", \"preferredDate\": \"2026-03-20\", \"preferredTime\": \"2:00 PM\"}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/book-consultation",
+              "host": ["{{base_url}}"],
+              "path": ["api", "book-consultation"]
+            }
+          }
+        },
+        {
+          "name": "[FAIL] Missing Service",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"name\": \"Test User\", \"email\": \"test@example.com\", \"phone\": \"+1 (555) 123-4567\", \"company\": \"Tech Solutions\", \"budget\": \"5000-10000\", \"message\": \"Need website\", \"preferredDate\": \"2026-03-20\", \"preferredTime\": \"2:00 PM\"}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/book-consultation",
+              "host": ["{{base_url}}"],
+              "path": ["api", "book-consultation"]
+            }
+          }
+        },
+        {
+          "name": "[FAIL] Missing Budget",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"name\": \"Test User\", \"email\": \"test@example.com\", \"phone\": \"+1 (555) 123-4567\", \"company\": \"Tech Solutions\", \"service\": \"Web Development\", \"message\": \"Need website\", \"preferredDate\": \"2026-03-20\", \"preferredTime\": \"2:00 PM\"}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/book-consultation",
+              "host": ["{{base_url}}"],
+              "path": ["api", "book-consultation"]
+            }
+          }
+        },
+        {
+          "name": "[FAIL] Missing Message",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"name\": \"Test User\", \"email\": \"test@example.com\", \"phone\": \"+1 (555) 123-4567\", \"company\": \"Tech Solutions\", \"service\": \"Web Development\", \"budget\": \"5000-10000\", \"preferredDate\": \"2026-03-20\", \"preferredTime\": \"2:00 PM\"}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/book-consultation",
+              "host": ["{{base_url}}"],
+              "path": ["api", "book-consultation"]
+            }
+          }
+        },
+        {
+          "name": "[FAIL] Missing Preferred Date",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"name\": \"Test User\", \"email\": \"test@example.com\", \"phone\": \"+1 (555) 123-4567\", \"company\": \"Tech Solutions\", \"service\": \"Web Development\", \"budget\": \"5000-10000\", \"message\": \"Need website\", \"preferredTime\": \"2:00 PM\"}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/book-consultation",
+              "host": ["{{base_url}}"],
+              "path": ["api", "book-consultation"]
+            }
+          }
+        },
+        {
+          "name": "[FAIL] Missing Preferred Time",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"name\": \"Test User\", \"email\": \"test@example.com\", \"phone\": \"+1 (555) 123-4567\", \"company\": \"Tech Solutions\", \"service\": \"Web Development\", \"budget\": \"5000-10000\", \"message\": \"Need website\", \"preferredDate\": \"2026-03-20\"}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/book-consultation",
+              "host": ["{{base_url}}"],
+              "path": ["api", "book-consultation"]
+            }
+          }
+        },
+        {
+          "name": "[FAIL] Invalid Email Format",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"name\": \"Test User\", \"email\": \"invalid-email\", \"phone\": \"+1 (555) 123-4567\", \"company\": \"Tech Solutions\", \"service\": \"Web Development\", \"budget\": \"5000-10000\", \"message\": \"Need website\", \"preferredDate\": \"2026-03-20\", \"preferredTime\": \"2:00 PM\"}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/book-consultation",
+              "host": ["{{base_url}}"],
+              "path": ["api", "book-consultation"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "STEP 2 - Confirm Consultation (Click Email Link)",
+      "item": [
+        {
+          "name": "[PASS] Valid Token Confirmation",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Confirmation successful\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.success).to.eql(true);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/confirm/{{confirmation_token}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "confirm", "{{confirmation_token}}"]
+            }
+          }
+        },
+        {
+          "name": "[FAIL] Invalid Token",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/confirm/invalid_token_xyz",
+              "host": ["{{base_url}}"],
+              "path": ["api", "confirm", "invalid_token_xyz"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Health & Status",
+      "item": [
+        {
+          "name": "Server Health Check",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/health",
+              "host": ["{{base_url}}"],
+              "path": ["health"]
+            }
+          }
+        },
+        {
+          "name": "Root Endpoint",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/",
+              "host": ["{{base_url}}"],
+              "path": [""]
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:3000",
+      "type": "string"
+    },
+    {
+      "key": "confirmation_token",
+      "value": "",
+      "type": "string"
+    }
+  ]
+}
