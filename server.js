@@ -19,8 +19,31 @@ console.log('EMAIL_PASS:', process.env.EMAIL_PASS ? '***configured***' : 'NOT SE
 console.log('===================================\n');
 
 // CORS configuration
-app.use(cors());
-console.log('CORS enabled for all origins');
+const allowedOrigins = [
+  'http://localhost:3000',
+  'http://localhost:5173',
+  'https://b-spoke.com.au',
+  'https://www.b-spoke.com.au',
+  process.env.FRONTEND_URL
+].filter(Boolean);
+
+app.use(cors({
+  origin: function (origin, callback) {
+    // Allow requests with no origin (like mobile apps or curl requests)
+    if (!origin) return callback(null, true);
+    
+    if (allowedOrigins.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      console.log('CORS blocked origin:', origin);
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
+console.log('CORS enabled for origins:', allowedOrigins);
 
 // Body parser middleware
 app.use(express.json());
