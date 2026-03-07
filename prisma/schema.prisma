@@ -1,0 +1,35 @@
+// This is your Prisma schema file
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Consultation {
+  id              String   @id @default(uuid())
+  token           String   @unique
+  name            String
+  email           String
+  phone           String
+  company         String
+  postcode        String?
+  propertyType    String?
+  service         String
+  budget          String
+  message         String?
+  preferredDate   String?
+  preferredTime   String
+  timeline        String?
+  timelineDetails String?
+  confirmed       Boolean  @default(false)
+  confirmedAt     DateTime?
+  createdAt       DateTime @default(now())
+  expiresAt       DateTime
+
+  @@index([token])
+  @@index([email])
+}

@@ -85,7 +85,7 @@ class ConsultationController {
       // Step 1: Generate token and store consultation
       console.log("\n--- Step 1: Generate Token ---");
       const token = consultationService.generateToken();
-      consultationService.storeConsultation(token, formData);
+      await consultationService.storeConsultation(token, formData);
 
       // Step 2: Create confirmation link (direct to backend API)
       const backendUrl = process.env.BACKEND_URL;
@@ -172,7 +172,7 @@ class ConsultationController {
 
       // Step 1: Get consultation by token
       console.log("--- Step 1: Retrieving Consultation ---");
-      const consultation = consultationService.getConsultation(token);
+      const consultation = await consultationService.getConsultation(token);
 
       if (!consultation) {
         console.log("❌ Invalid or expired token");
@@ -202,11 +202,75 @@ class ConsultationController {
         `);
       }
 
-      // Step 2: Confirm the consultation
+      // Step 2: Confirm the consultation (checks for duplicates)
       console.log("--- Step 2: Marking as Confirmed ---");
-      const confirmed = consultationService.confirmConsultation(token);
+      const confirmResult = await consultationService.confirmConsultation(token);
 
-      if (!confirmed) {
+      if (!confirmResult.success) {
+        // Check if already confirmed
+        if (confirmResult.error === 'already_confirmed') {
+          console.log("⚠️  Already confirmed, redirecting to homepage...");
+          return res.status(200).send(`
+            <!DOCTYPE html>
+            <html>
+              <head>
+                <meta charset="utf-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>Already Confirmed</title>
+                <style>
+                  body { 
+                    font-family: Arial, sans-serif; 
+                    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
+                    margin: 0; 
+                    padding: 20px; 
+                    min-height: 100vh; 
+                    display: flex; 
+                    align-items: center; 
+                    justify-content: center; 
+                  }
+                  .container { 
+                    max-width: 500px; 
+                    background: white; 
+                    padding: 50px; 
+                    border-radius: 12px; 
+                    text-align: center; 
+                    box-shadow: 0 10px 30px rgba(0,0,0,0.3); 
+                  }
+                  h2 { color: #ff9800; margin-top: 0; font-size: 28px; }
+                  p { color: #666; line-height: 1.8; font-size: 16px; margin: 20px 0; }
+                  .spinner { 
+                    width: 50px; 
+                    height: 50px; 
+                    border: 4px solid #f3f3f3; 
+                    border-top: 4px solid #667eea; 
+                    border-radius: 50%; 
+                    animation: spin 1s linear infinite; 
+                    margin: 30px auto; 
+                  }
+                  @keyframes spin {
+                    0% { transform: rotate(0deg); }
+                    100% { transform: rotate(360deg); }
+                  }
+                </style>
+                <script>
+                  setTimeout(function() {
+                    window.location.href = '${process.env.FRONTEND_URL || 'https://www.b-spoke.com.au'}';
+                  }, 2000);
+                </script>
+              </head>
+              <body>
+                <div class="container">
+                  <h2>⚠️ Already Confirmed</h2>
+                  <p>You have already confirmed this consultation request.</p>
+                  <p>We will contact you soon!</p>
+                  <div class="spinner"></div>
+                  <p style="font-size: 14px; color: #999;">Redirecting to homepage...</p>
+                </div>
+              </body>
+            </html>
+          `);
+        }
+
         console.log("❌ Failed to confirm");
         return res.status(400).send(`
           <!DOCTYPE html>
@@ -235,7 +299,7 @@ class ConsultationController {
       // Step 3: Send email to admin (in background - don't await)
       console.log("\n--- Step 3: Sending to Admin ---");
       consultationService
-        .sendConsultationToAdmin(consultation)
+        .sendConsultationToAdmin(confirmResult.consultation)
         .then(() => {
           console.log("✅ Admin email sent successfully!");
         })
@@ -248,7 +312,7 @@ class ConsultationController {
 
       console.log("✅ Consultation confirmed!");
 
-      // Return HTML success page (not JSON)
+      // Return HTML loading page with redirect
       return res.status(200).send(`
         <!DOCTYPE html>
         <html>
@@ -257,34 +321,62 @@ class ConsultationController {
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
             <title>Confirmation Successful</title>
             <style>
-              body { font-family: Arial, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); margin: 0; padding: 20px; min-height: 100vh; display: flex; align-items: center; justify-content: center; }
-              .container { max-width: 500px; background: white; padding: 50px; border-radius: 8px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
+              body { 
+                font-family: Arial, sans-serif; 
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
+                margin: 0; 
+                padding: 20px; 
+                min-height: 100vh; 
+                display: flex; 
+                align-items: center; 
+                justify-content: center; 
+              }
+              .container { 
+                max-width: 500px; 
+                background: white; 
+                padding: 50px; 
+                border-radius: 12px; 
+                text-align: center; 
+                box-shadow: 0 10px 30px rgba(0,0,0,0.3); 
+              }
               h1 { color: #4caf50; margin-top: 0; font-size: 36px; }
               h2 { color: #333; font-size: 24px; margin: 20px 0; }
-              p { color: #666; line-height: 1.8; font-size: 15px; }
-              .checkmark { font-size: 60px; margin: 20px 0; }
-              .details { background: #f5f5f5; padding: 20px; border-radius: 5px; margin: 20px 0; text-align: left; }
-              .details p { margin: 10px 0; font-size: 14px; }
-              .label { font-weight: bold; color: #333; }
-              .value { color: #666; }
+              p { color: #666; line-height: 1.8; font-size: 16px; margin: 20px 0; }
+              .checkmark { font-size: 60px; margin: 20px 0; animation: scaleIn 0.5s ease-in-out; }
+              @keyframes scaleIn {
+                0% { transform: scale(0); }
+                50% { transform: scale(1.2); }
+                100% { transform: scale(1); }
+              }
+              .spinner { 
+                width: 50px; 
+                height: 50px; 
+                border: 4px solid #f3f3f3; 
+                border-top: 4px solid #667eea; 
+                border-radius: 50%; 
+                animation: spin 1s linear infinite; 
+                margin: 30px auto; 
+              }
+              @keyframes spin {
+                0% { transform: rotate(0deg); }
+                100% { transform: rotate(360deg); }
+              }
             </style>
+            <script>
+              setTimeout(function() {
+                window.location.href = '${process.env.FRONTEND_URL || 'https://www.b-spoke.com.au'}';
+              }, 2000);
+            </script>
           </head>
           <body>
             <div class="container">
               <div class="checkmark">✅</div>
               <h1>Success!</h1>
-              <h2>Your Consultation is Now Confirmed</h2>
-              <p>Thank you for confirming your consultation request.</p>
-              
-              <div class="details">
-                <p><span class="label">Name:</span> <span class="value">${consultation.formData.name}</span></p>
-                <p><span class="label">Email:</span> <span class="value">${consultation.formData.email}</span></p>
-                <p><span class="label">Preferred Date:</span> <span class="value">${consultation.formData.preferredDate}</span></p>
-                <p><span class="label">Preferred Time:</span> <span class="value">${consultation.formData.preferredTime}</span></p>
-              </div>
-              
-              <p>We have received your confirmation and our team will contact you soon at the email address and phone number provided.</p>
-              <p><strong>Confirmed at:</strong> ${new Date(consultation.confirmedAt).toLocaleString()}</p>
+              <h2>Your Consultation is Confirmed</h2>
+              <p>Thank you for confirming your consultation request!</p>
+              <p>Our team will contact you soon.</p>
+              <div class="spinner"></div>
+              <p style="font-size: 14px; color: #999;">Redirecting to homepage...</p>
             </div>
           </body>
         </html>

@@ -5,7 +5,11 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "dev": "node server.js"
+    "dev": "node server.js",
+    "prisma:generate": "npx prisma generate",
+    "prisma:migrate": "npx prisma migrate dev",
+    "prisma:studio": "npx prisma studio",
+    "db:push": "npx prisma db push"
   },
   "keywords": [
     "express",
@@ -15,9 +19,11 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@prisma/client": "^6.19.2",
     "cors": "^2.8.6",
     "dotenv": "^17.3.1",
     "express": "^5.2.1",
-    "nodemailer": "^8.0.1"
+    "nodemailer": "^8.0.1",
+    "prisma": "^6.19.2"
   }
 }
