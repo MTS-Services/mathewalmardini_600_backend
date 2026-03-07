@@ -12,11 +12,11 @@ class ConsultationController {
         name,
         email,
         phone,
-        company,
+        address,
         postcode,
         propertyType,
         service,
-        budget,
+        bathroom,
         message,
         preferredDate,
         preferredTime,
@@ -29,24 +29,24 @@ class ConsultationController {
         !name ||
         !email ||
         !phone ||
-        !company ||
+        !address ||
         !service ||
-        !budget ||
+        !bathroom ||
         !preferredTime
       ) {
         console.log("Validation Failed: Missing required fields");
         console.log("Name:", name);
         console.log("Email:", email);
         console.log("Phone:", phone);
-        console.log("Company:", company);
+        console.log("Address:", address);
         console.log("Service:", service);
-        console.log("Budget:", budget);
+        console.log("Bathroom:", bathroom);
         console.log("Preferred Time:", preferredTime);
 
         return res.status(400).json({
           success: false,
           message:
-            "All fields are required: name, email, phone, company, service, budget, and preferredTime",
+            "All fields are required: name, email, phone, address, service, bathroom, and preferredTime",
         });
       }
 
@@ -68,11 +68,11 @@ class ConsultationController {
         name,
         email,
         phone,
-        company,
+        address,
         postcode: postcode || "",
         propertyType: propertyType || "",
         service,
-        budget,
+        bathroom,
         message: message || "",
         preferredDate: preferredDate || "",
         preferredTime,

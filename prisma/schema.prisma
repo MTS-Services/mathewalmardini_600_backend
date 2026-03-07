@@ -15,11 +15,11 @@ model Consultation {
   name            String
   email           String
   phone           String
-  company         String
+  address         String
   postcode        String?
   propertyType    String?
   service         String
-  budget          String
+  bathroom        String
   message         String?
   preferredDate   String?
   preferredTime   String
