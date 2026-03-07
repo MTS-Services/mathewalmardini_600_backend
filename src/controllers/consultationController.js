@@ -220,7 +220,7 @@ class ConsultationController {
                 <style>
                   body { 
                     font-family: Arial, sans-serif; 
-                    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
+                    background: white; 
                     margin: 0; 
                     padding: 20px; 
                     min-height: 100vh; 
@@ -230,19 +230,14 @@ class ConsultationController {
                   }
                   .container { 
                     max-width: 500px; 
-                    background: white; 
-                    padding: 50px; 
-                    border-radius: 12px; 
                     text-align: center; 
-                    box-shadow: 0 10px 30px rgba(0,0,0,0.3); 
                   }
                   h2 { color: #ff9800; margin-top: 0; font-size: 28px; }
-                  p { color: #666; line-height: 1.8; font-size: 16px; margin: 20px 0; }
                   .spinner { 
                     width: 50px; 
                     height: 50px; 
                     border: 4px solid #f3f3f3; 
-                    border-top: 4px solid #667eea; 
+                    border-top: 4px solid #ff9800; 
                     border-radius: 50%; 
                     animation: spin 1s linear infinite; 
                     margin: 30px auto; 
@@ -260,11 +255,8 @@ class ConsultationController {
               </head>
               <body>
                 <div class="container">
-                  <h2>⚠️ Already Confirmed</h2>
-                  <p>You have already confirmed this consultation request.</p>
-                  <p>We will contact you soon!</p>
+                  <h2>Already Confirmed</h2>
                   <div class="spinner"></div>
-                  <p style="font-size: 14px; color: #999;">Redirecting to homepage...</p>
                 </div>
               </body>
             </html>
@@ -319,11 +311,11 @@ class ConsultationController {
           <head>
             <meta charset="utf-8">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>Confirmation Successful</title>
+            <title>Success</title>
             <style>
               body { 
                 font-family: Arial, sans-serif; 
-                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
+                background: white; 
                 margin: 0; 
                 padding: 20px; 
                 min-height: 100vh; 
@@ -333,26 +325,14 @@ class ConsultationController {
               }
               .container { 
                 max-width: 500px; 
-                background: white; 
-                padding: 50px; 
-                border-radius: 12px; 
                 text-align: center; 
-                box-shadow: 0 10px 30px rgba(0,0,0,0.3); 
               }
               h1 { color: #4caf50; margin-top: 0; font-size: 36px; }
-              h2 { color: #333; font-size: 24px; margin: 20px 0; }
-              p { color: #666; line-height: 1.8; font-size: 16px; margin: 20px 0; }
-              .checkmark { font-size: 60px; margin: 20px 0; animation: scaleIn 0.5s ease-in-out; }
-              @keyframes scaleIn {
-                0% { transform: scale(0); }
-                50% { transform: scale(1.2); }
-                100% { transform: scale(1); }
-              }
               .spinner { 
                 width: 50px; 
                 height: 50px; 
                 border: 4px solid #f3f3f3; 
-                border-top: 4px solid #667eea; 
+                border-top: 4px solid #4caf50; 
                 border-radius: 50%; 
                 animation: spin 1s linear infinite; 
                 margin: 30px auto; 
@@ -370,13 +350,8 @@ class ConsultationController {
           </head>
           <body>
             <div class="container">
-              <div class="checkmark">✅</div>
               <h1>Success!</h1>
-              <h2>Your Consultation is Confirmed</h2>
-              <p>Thank you for confirming your consultation request!</p>
-              <p>Our team will contact you soon.</p>
               <div class="spinner"></div>
-              <p style="font-size: 14px; color: #999;">Redirecting to homepage...</p>
             </div>
           </body>
         </html>
