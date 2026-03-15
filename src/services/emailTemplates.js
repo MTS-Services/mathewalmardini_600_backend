@@ -28,9 +28,9 @@ const getConsultationEmailTemplate = (formData) => {
                     
                     <!-- Header -->
                     <tr>
-                        <td style="background: linear-gradient(135deg, #2d6b7a 0%, #1a4d5e 100%); padding: 40px 30px; text-align: center;">
+                        <td style="background-color: #205767; padding: 40px 30px; text-align: center;">
                             <h1 style="margin: 0; color: #ffffff; font-size: 28px; font-weight: bold;">
-                                📩 New Consultation Request
+                                New Consultation Request
                             </h1>
                             <p style="margin: 10px 0 0 0; color: #f0f0f0; font-size: 14px;">
                                 Someone wants to book a consultation with you!
@@ -52,7 +52,7 @@ const getConsultationEmailTemplate = (formData) => {
                             <table role="presentation" style="width: 100%; border-collapse: collapse; background-color: #f8f9fa; border-radius: 8px; margin-bottom: 20px;">
                                 <tr>
                                     <td style="padding: 25px;">
-                                        <h2 style="margin: 0 0 20px 0; color: #2d6b7a; font-size: 20px; border-bottom: 2px solid #2d6b7a; padding-bottom: 10px;">
+                                        <h2 style="margin: 0 0 20px 0; color: #205767; font-size: 20px; border-bottom: 2px solid #205767; padding-bottom: 10px;">
                                             👤 Personal Information
                                         </h2>
                                         
@@ -70,7 +70,7 @@ const getConsultationEmailTemplate = (formData) => {
                                                     Email Address:
                                                 </td>
                                                 <td style="padding: 10px 0; color: #333333;">
-                                                    <a href="mailto:${email}" style="color: #2d6b7a; text-decoration: none; font-weight: 600;">
+                                                    <a href="mailto:${email}" style="color: #205767; text-decoration: none; font-weight: 600;">
                                                         ${email || 'Not provided'}
                                                     </a>
                                                 </td>
@@ -80,7 +80,7 @@ const getConsultationEmailTemplate = (formData) => {
                                                     Phone Number:
                                                 </td>
                                                 <td style="padding: 10px 0; color: #333333;">
-                                                    <a href="tel:${phone}" style="color: #2d6b7a; text-decoration: none;">
+                                                    <a href="tel:${phone}" style="color: #205767; text-decoration: none;">
                                                         ${phone || 'Not provided'}
                                                     </a>
                                                 </td>
@@ -118,7 +118,7 @@ const getConsultationEmailTemplate = (formData) => {
                             <table role="presentation" style="width: 100%; border-collapse: collapse; background-color: #e7f3ff; border-radius: 8px; margin-bottom: 20px;">
                                 <tr>
                                     <td style="padding: 25px;">
-                                        <h2 style="margin: 0 0 20px 0; color: #2d6b7a; font-size: 20px; border-bottom: 2px solid #2d6b7a; padding-bottom: 10px;">
+                                        <h2 style="margin: 0 0 20px 0; color: #205767; font-size: 20px; border-bottom: 2px solid #205767; padding-bottom: 10px;">
                                             💼 Service Requirements
                                         </h2>
                                         
@@ -128,7 +128,7 @@ const getConsultationEmailTemplate = (formData) => {
                                                     Service Interested In:
                                                 </td>
                                                 <td style="padding: 10px 0; color: #333333;">
-                                                    <span style="background-color: #2d6b7a; color: white; padding: 5px 15px; border-radius: 20px; display: inline-block; font-size: 14px;">
+                                                    <span style="background-color: #205767; color: white; padding: 5px 15px; border-radius: 20px; display: inline-block; font-size: 14px;">
                                                         ${service || 'Not specified'}
                                                     </span>
                                                 </td>
@@ -151,7 +151,7 @@ const getConsultationEmailTemplate = (formData) => {
                             <table role="presentation" style="width: 100%; border-collapse: collapse; background-color: #e8f1f4; border-radius: 8px; margin-bottom: 20px;">
                                 <tr>
                                     <td style="padding: 25px;">
-                                        <h2 style="margin: 0 0 20px 0; color: #2d6b7a; font-size: 20px; border-bottom: 2px solid #ffc107; padding-bottom: 10px;">
+                                        <h2 style="margin: 0 0 20px 0; color: #205767; font-size: 20px; border-bottom: 2px solid #ffc107; padding-bottom: 10px;">
                                             📅 Preferred Schedule
                                         </h2>
                                         
@@ -204,23 +204,13 @@ const getConsultationEmailTemplate = (formData) => {
                             </table>
                             ` : ''}
 
-                            <!-- CTA Button -->
-                            <table role="presentation" style="width: 100%; border-collapse: collapse; margin: 30px 0;">
+                            <!-- CTA Button (Outlook-compatible) -->
+                            <table role="presentation" cellpadding="0" cellspacing="0" style="margin: 30px auto;">
                                 <tr>
-                                    <td align="center" style="padding: 20px 0;">
-                                        <a href="mailto:${email}?subject=Re: Consultation Request from ${name}" style="display: inline-block; padding: 16px 45px; background: linear-gradient(135deg, #2d6b7a 0%, #1a4d5e 100%); color: #ffffff; text-decoration: none; border-radius: 50px; font-weight: bold; font-size: 16px; box-shadow: 0 4px 15px rgba(45, 107, 122, 0.4); transition: all 0.3s;">
-                                            📧 Reply to ${name}
+                                    <td align="center" bgcolor="#205767" style="border-radius: 6px;">
+                                        <a href="mailto:${email}?subject=Re: Consultation Request from ${name}" target="_blank" style="display: inline-block; padding: 16px 45px; font-family: Arial, sans-serif; font-size: 16px; font-weight: bold; color: #ffffff; text-decoration: none; border-radius: 6px; background-color: #205767;">
+                                            Reply to ${name}
                                         </a>
-                                    </td>
-                                </tr>
-                            </table>
-
-                            <table role="presentation" style="width: 100%; border-collapse: collapse; background-color: #f8f9fa; border-radius: 5px; padding: 15px; margin-top: 20px;">
-                                <tr>
-                                    <td style="padding: 10px;">
-                                        <p style="margin: 0; font-size: 13px; color: #666666; text-align: center;">
-                                            📌 <strong>Quick Action:</strong> Click the button above to respond directly via email
-                                        </p>
                                     </td>
                                 </tr>
                             </table>
@@ -229,7 +219,7 @@ const getConsultationEmailTemplate = (formData) => {
 
                     <!-- Footer -->
                     <tr>
-                        <td style="background-color: #2c3e50; padding: 30px; text-align: center;">
+                        <td style="background-color: #163f4f; padding: 30px; text-align: center;">
                             <p style="margin: 0 0 10px 0; font-size: 14px; color: #ecf0f1;">
                                 📧 Consultation Request • Received on ${new Date().toLocaleDateString('en-US', { 
                                     weekday: 'long', 
@@ -271,7 +261,7 @@ const getAutoReplyTemplate = (userName) => {
                     
                     <!-- Header -->
                     <tr>
-                        <td style="background: linear-gradient(135deg, #2d6b7a 0%, #1a4d5e 100%); padding: 40px 30px; text-align: center;">
+                        <td style="background-color: #205767; padding: 40px 30px; text-align: center;">
                             <div style="font-size: 50px; margin-bottom: 10px;">✅</div>
                             <h1 style="margin: 0; color: #ffffff; font-size: 28px; font-weight: bold;">
                                 Request Received Successfully!
@@ -293,10 +283,10 @@ const getAutoReplyTemplate = (userName) => {
                             </p>
                             
                             <!-- What Happens Next -->
-                            <table role="presentation" style="width: 100%; border-collapse: collapse; background-color: #e8f1f4; border-left: 4px solid #2d6b7a; margin: 25px 0;">
+                            <table role="presentation" style="width: 100%; border-collapse: collapse; background-color: #e8f1f4; border-left: 4px solid #205767; margin: 25px 0;">
                                 <tr>
                                     <td style="padding: 25px;">
-                                        <h3 style="margin: 0 0 15px 0; color: #2d6b7a; font-size: 18px;">
+                                        <h3 style="margin: 0 0 15px 0; color: #205767; font-size: 18px;">
                                             📋 What Happens Next?
                                         </h3>
                                         <ul style="margin: 0; padding-left: 20px; color: #333333; line-height: 1.8;">
@@ -331,7 +321,7 @@ const getAutoReplyTemplate = (userName) => {
 
                     <!-- Footer -->
                     <tr>
-                        <td style="background-color: #2c3e50; padding: 30px; text-align: center;">
+                        <td style="background-color: #163f4f; padding: 30px; text-align: center;">
                             <p style="margin: 0 0 10px 0; font-size: 14px; color: #ecf0f1;">
                                 Best regards,<br>
                                 <strong style="font-size: 16px;">Your Company Team</strong>
@@ -362,7 +352,7 @@ const getConfirmationEmailTemplate = (name, confirmLink, token) => {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Confirm Your Consultation Request</title>
+    <title>Consultation Request Received</title>
 </head>
 <body style="margin: 0; padding: 0; font-family: 'Arial', sans-serif; background-color: #f4f4f4;">
     <table role="presentation" style="width: 100%; border-collapse: collapse;">
@@ -372,13 +362,12 @@ const getConfirmationEmailTemplate = (name, confirmLink, token) => {
                     
                     <!-- Header -->
                     <tr>
-                        <td style="background: linear-gradient(135deg, #2d6b7a 0%, #1a4d5e 100%); padding: 40px 30px; text-align: center;">
-                            <div style="font-size: 50px; margin-bottom: 10px;">📧</div>
+                        <td style="background-color: #205767; padding: 40px 30px; text-align: center;">
                             <h1 style="margin: 0; color: #ffffff; font-size: 28px; font-weight: bold;">
-                                Confirm Your Consultation Request
+                                Consultation Request Received
                             </h1>
                             <p style="margin: 10px 0 0 0; color: #f0f0f0; font-size: 14px;">
-                                One click to confirm
+                                We've got your request!
                             </p>
                         </td>
                     </tr>
@@ -390,57 +379,35 @@ const getConfirmationEmailTemplate = (name, confirmLink, token) => {
                                 Dear <strong>${name}</strong>, 👋
                             </p>
                             <p style="margin: 0 0 30px 0; font-size: 16px; color: #333333; line-height: 1.6;">
-                                Thank you for submitting your consultation request! Please confirm by clicking the button below. Once you confirm, we'll notify our team and they'll get back to you shortly.
-                            </p>
-
-                            <!-- Confirmation Button -->
-                            <table role="presentation" style="width: 100%; border-collapse: collapse; margin: 30px 0;">
-                                <tr>
-                                    <td align="center" style="padding: 20px 0;">
-                                        <a href="${confirmLink}" style="display: inline-block; padding: 16px 50px; background: linear-gradient(135deg, #2d6b7a 0%, #1a4d5e 100%); color: #ffffff; text-decoration: none; border-radius: 50px; font-weight: bold; font-size: 16px; box-shadow: 0 4px 15px rgba(45, 107, 122, 0.4);">
-                                            ✓ Confirm Consultation Request
-                                        </a>
-                                    </td>
-                                </tr>
-                            </table>
-
-                            <p style="margin: 20px 0; font-size: 14px; color: #666666; text-align: center;">
-                                Or copy this link if the button doesn't work:
-                            </p>
-                            <p style="margin: 10px 0 20px 0; font-size: 13px; color: #2d6b7a; word-break: break-all; text-align: center;">
-                                ${confirmLink}
+                                Thank you for submitting your consultation request! We have received your details and our team will review them shortly.
                             </p>
 
                             <!-- Info Box -->
                             <table role="presentation" style="width: 100%; border-collapse: collapse; background-color: #e8f1f4; border-radius: 8px; margin: 25px 0;">
                                 <tr>
                                     <td style="padding: 20px;">
-                                        <p style="margin: 0; font-size: 14px; color: #2d6b7a;">
+                                        <p style="margin: 0; font-size: 14px; color: #205767;">
                                             <strong>ℹ️ What happens next?</strong>
                                         </p>
                                         <ul style="margin: 10px 0 0 0; padding-left: 20px; color: #333333;">
-                                            <li style="margin-bottom: 8px;">We receive your confirmation</li>
                                             <li style="margin-bottom: 8px;">Our team reviews your request</li>
+                                            <li style="margin-bottom: 8px;">We will be in touch with you soon</li>
                                             <li>We contact you within 24-48 hours</li>
                                         </ul>
                                     </td>
                                 </tr>
                             </table>
-
-                            <p style="margin: 20px 0 0 0; font-size: 13px; color: #999999; text-align: center;">
-                                This link expires in 24 hours
-                            </p>
                         </td>
                     </tr>
 
                     <!-- Footer -->
                     <tr>
-                        <td style="background-color: #2c3e50; padding: 30px; text-align: center;">
+                        <td style="background-color: #163f4f; padding: 30px; text-align: center;">
                             <p style="margin: 0 0 10px 0; font-size: 14px; color: #ecf0f1;">
                                 Need help? Reply to this email
                             </p>
                             <p style="margin: 15px 0 0 0; font-size: 12px; color: #95a5a6;">
-                                © ${new Date().getFullYear()} Your Company. All rights reserved.
+                                © ${new Date().getFullYear()} B-Spoke. All rights reserved.
                             </p>
                         </td>
                     </tr>

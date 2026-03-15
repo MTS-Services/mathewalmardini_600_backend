@@ -85,8 +85,8 @@ class ConsultationService {
       const confirmationHTML = getConfirmationEmailTemplate(formData.name, confirmLink, token);
       const result = await emailService.sendEmail(
         formData.email,
-        '📧 Confirm Your Consultation Request',
-        `Hi ${formData.name}, please confirm your consultation request by clicking the link in the email.`,
+        '✅ Consultation Request Received - B-Spoke',
+        `Hi ${formData.name}, we have received your consultation request and will be in touch shortly.`,
         confirmationHTML
       );
       console.log('Confirmation email sent successfully!\n');
