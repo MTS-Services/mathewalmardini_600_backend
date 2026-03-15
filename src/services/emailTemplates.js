@@ -390,9 +390,9 @@ const getConfirmationEmailTemplate = (name, confirmLink, token) => {
                                             <strong>ℹ️ What happens next?</strong>
                                         </p>
                                         <ul style="margin: 10px 0 0 0; padding-left: 20px; color: #333333;">
-                                            <li style="margin-bottom: 8px;">Our team reviews your request</li>
+                                            <li style="margin-bottom: 8px;">Our team will reviews your request</li>
                                             <li style="margin-bottom: 8px;">We will be in touch with you soon</li>
-                                            <li>We contact you within 24-48 hours</li>
+                                            <li>We will contact you within 24-48 hours</li>
                                         </ul>
                                     </td>
                                 </tr>
