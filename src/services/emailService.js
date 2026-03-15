@@ -27,7 +27,8 @@ class EmailService {
 
     try {
       const mailOptions = {
-        from: `B-Spoke <${process.env.EMAIL_FROM || process.env.EMAIL_USER}>`,
+        from: `B-Spoke <${process.env.EMAIL_USER}>`,
+        replyTo: `B-Spoke <${process.env.EMAIL_FROM || process.env.EMAIL_USER}>`,
         to: to,
         subject: subject,
         text: text,
