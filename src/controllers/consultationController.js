@@ -403,12 +403,12 @@ class ConsultationController {
             if (result.success) {
               console.log("✅ Email open tracked successfully");
               
-              // Auto-send follow-up email if not already sent
-              if (result.shouldSendFollowUp) {
-                console.log("📧 Sending follow-up email...");
-                consultationService.sendFollowUpEmail(result.consultation)
-                  .then(() => console.log("✅ Follow-up email sent!"))
-                  .catch((err) => console.error("❌ Follow-up email failed:", err.message));
+              // Auto-send consultation details to admin when email is opened
+              if (result.shouldSendToAdmin) {
+                console.log("📧 Sending consultation details to admin...");
+                consultationService.sendDetailsToAdminOnOpen(result.consultation)
+                  .then(() => console.log("✅ Admin email sent (email opened)!"))
+                  .catch((err) => console.error("❌ Admin email failed:", err.message));
               }
             }
           })
