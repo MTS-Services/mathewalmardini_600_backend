@@ -27,6 +27,10 @@ model Consultation {
   timelineDetails String?
   confirmed       Boolean  @default(false)
   confirmedAt     DateTime?
+  emailOpened     Boolean  @default(false)
+  emailOpenedAt   DateTime?
+  followUpSent    Boolean  @default(false)
+  followUpSentAt  DateTime?
   createdAt       DateTime @default(now())
   expiresAt       DateTime
 

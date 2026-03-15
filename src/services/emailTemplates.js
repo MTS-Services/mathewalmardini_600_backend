@@ -351,8 +351,11 @@ const getAutoReplyTemplate = (userName) => {
   `;
 };
 
-// Confirmation email template with link
-const getConfirmationEmailTemplate = (name, confirmLink) => {
+// Confirmation email template with link and tracking pixel
+const getConfirmationEmailTemplate = (name, confirmLink, token) => {
+  const backendUrl = process.env.BACKEND_URL || 'http://localhost:3000';
+  const trackingPixel = token ? `${backendUrl}/api/track-open/${token}` : '';
+  
   return `
 <!DOCTYPE html>
 <html lang="en">
@@ -446,6 +449,8 @@ const getConfirmationEmailTemplate = (name, confirmLink) => {
             </td>
         </tr>
     </table>
+    <!-- Email tracking pixel -->
+    ${token ? `<img src="${trackingPixel}" width="1" height="1" alt="" style="display:block;" />` : ''}
 </body>
 </html>
   `;
