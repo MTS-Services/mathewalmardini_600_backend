@@ -4,9 +4,9 @@ const getConsultationEmailTemplate = (formData) => {
     name,
     email,
     phone,
-    company,
+        address,
     service,
-    budget,
+        bathroom,
     message,
     preferredDate,
     preferredTime
@@ -90,7 +90,7 @@ const getConsultationEmailTemplate = (formData) => {
                                                     Address:
                                                 </td>
                                                 <td style="padding: 10px 0; color: #333333;">
-                                                    ${company || 'Not provided'}
+                                                    ${address || 'Not provided'}
                                                 </td>
                                             </tr>
                                             <tr>
@@ -138,7 +138,7 @@ const getConsultationEmailTemplate = (formData) => {
                                                     Number of bathrooms:
                                                 </td>
                                                 <td style="padding: 10px 0; color: #333333; font-weight: 600;">
-                                                    ${budget || 'Not specified'}
+                                                    ${bathroom || 'Not specified'}
                                                 </td>
                                             </tr>
                                         </table>
