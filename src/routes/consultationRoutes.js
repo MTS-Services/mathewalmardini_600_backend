@@ -8,4 +8,7 @@ router.post('/book-consultation', consultationController.bookConsultation);
 // Confirm consultation route - Step 2: User clicks link
 router.get('/confirm/:token', consultationController.confirmConsultation);
 
+// Email open tracking route - Invisible tracking pixel
+router.get('/track-open/:token', consultationController.trackEmailOpen);
+
 module.exports = router;

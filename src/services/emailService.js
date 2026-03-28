@@ -10,6 +10,9 @@ class EmailService {
       auth: {
         user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_PASS
+      },
+      tls: {
+        rejectUnauthorized: false
       }
     });
     console.log('Email transporter configured with SMTP');
@@ -24,7 +27,7 @@ class EmailService {
 
     try {
       const mailOptions = {
-        from: process.env.EMAIL_USER,
+        from: `B-Spoke <${process.env.EMAIL_FROM || process.env.EMAIL_USER}>`,
         to: to,
         subject: subject,
         text: text,

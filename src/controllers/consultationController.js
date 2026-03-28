@@ -97,6 +97,7 @@ class ConsultationController {
       const emailResult = await consultationService.sendConfirmationEmail(
         formData,
         confirmLink,
+        token
       );
 
       console.log("Consultation controller: Confirmation email sent to user");
@@ -383,6 +384,65 @@ class ConsultationController {
           </body>
         </html>
       `);
+    }
+  }
+
+  async trackEmailOpen(req, res) {
+    console.log("\n===== Email Open Tracking =====");
+    console.log("Token:", req.params.token?.substring(0, 10) + "...");
+    console.log("User-Agent:", req.headers['user-agent']);
+    console.log("================================\n");
+
+    try {
+      const { token } = req.params;
+
+      if (token) {
+        // Track email open asynchronously (don't wait)
+        consultationService.trackEmailOpen(token)
+          .then((result) => {
+            if (result.success) {
+              console.log("✅ Email open tracked successfully");
+              
+              // Auto-send consultation details to admin when email is opened
+              if (result.shouldSendToAdmin) {
+                console.log("📧 Sending consultation details to admin...");
+                consultationService.sendDetailsToAdminOnOpen(result.consultation)
+                  .then(() => console.log("✅ Admin email sent (email opened)!"))
+                  .catch((err) => console.error("❌ Admin email failed:", err.message));
+              }
+            }
+          })
+          .catch((err) => console.error("⚠️ Email tracking failed:", err.message));
+      }
+
+      // Return 1x1 transparent pixel (GIF)
+      const pixel = Buffer.from(
+        'R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7',
+        'base64'
+      );
+
+      res.writeHead(200, {
+        'Content-Type': 'image/gif',
+        'Content-Length': pixel.length,
+        'Cache-Control': 'no-store, no-cache, must-revalidate, private',
+        'Expires': '0',
+        'Pragma': 'no-cache'
+      });
+      res.end(pixel);
+
+    } catch (error) {
+      console.error("Track email open error:", error.message);
+      
+      // Still return pixel even on error
+      const pixel = Buffer.from(
+        'R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7',
+        'base64'
+      );
+      res.writeHead(200, {
+        'Content-Type': 'image/gif',
+        'Content-Length': pixel.length
+      });
+      res.end(pixel);
     }
   }
 }

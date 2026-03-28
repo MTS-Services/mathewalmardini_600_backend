@@ -74,7 +74,7 @@ class ConsultationService {
   }
 
   // Send confirmation email to user (Step 1)
-  async sendConfirmationEmail(formData, confirmLink) {
+  async sendConfirmationEmail(formData, confirmLink, token) {
     console.log('\n===== Sending Confirmation Email to User =====');
     console.log('User Email:', formData.email);
     console.log('Confirmation Link:', confirmLink);
@@ -82,11 +82,11 @@ class ConsultationService {
 
     try {
       console.log('--- Sending confirmation email ---');
-      const confirmationHTML = getConfirmationEmailTemplate(formData.name, confirmLink);
+      const confirmationHTML = getConfirmationEmailTemplate(formData.name, confirmLink, token);
       const result = await emailService.sendEmail(
         formData.email,
-        '📧 Confirm Your Consultation Request',
-        `Hi ${formData.name}, please confirm your consultation request by clicking the link in the email.`,
+        '✅ Consultation Request Received - B-Spoke',
+        `Hi ${formData.name}, we have received your consultation request and will be in touch shortly.`,
         confirmationHTML
       );
       console.log('Confirmation email sent successfully!\n');
@@ -160,6 +160,81 @@ class ConsultationService {
     } catch (error) {
       console.error('❌ Failed to confirm consultation:', error.message);
       return { success: false, error: error.message };
+    }
+  }
+
+  // Track email open
+  async trackEmailOpen(token) {
+    try {
+      const consultation = await prisma.consultation.findUnique({
+        where: { token }
+      });
+
+      if (!consultation) {
+        console.log('⚠️ Token not found for tracking:', token.substring(0, 10) + '...');
+        return { success: false };
+      }
+
+      // Only track if not already tracked
+      if (!consultation.emailOpened) {
+        const updated = await prisma.consultation.update({
+          where: { token },
+          data: {
+            emailOpened: true,
+            emailOpenedAt: new Date()
+          }
+        });
+
+        console.log('✅ Email opened tracked for:', consultation.name);
+        
+        // Send consultation details to admin if not already sent
+        const shouldSendToAdmin = !updated.followUpSent;
+
+        return {
+          success: true,
+          consultation: updated,
+          shouldSendToAdmin
+        };
+      }
+
+      return { success: true, alreadyTracked: true };
+    } catch (error) {
+      console.error('❌ Failed to track email open:', error.message);
+      return { success: false, error: error.message };
+    }
+  }
+
+  // Send consultation details to admin when email is opened
+  async sendDetailsToAdminOnOpen(consultation) {
+    console.log('\n===== Sending Consultation Details to Admin (Email Opened) =====');
+    console.log('Admin Email:', process.env.EMAIL_RECIPIENT);
+    console.log('From User:', consultation.name);
+    console.log('================================================================\n');
+
+    try {
+      // Mark as sent first to prevent duplicates
+      await prisma.consultation.update({
+        where: { token: consultation.token },
+        data: {
+          followUpSent: true,
+          followUpSentAt: new Date()
+        }
+      });
+
+      const adminEmailHTML = getConsultationEmailTemplate(consultation);
+      const result = await emailService.sendEmail(
+        process.env.EMAIL_RECIPIENT,
+        `📩 New Consultation Request from ${consultation.name} (Email Opened)`,
+        `New consultation request from ${consultation.name} (${consultation.email}) - User opened the confirmation email.`,
+        adminEmailHTML
+      );
+
+      console.log('✅ Admin email sent successfully (triggered by email open)!');
+      return { success: true, data: result };
+
+    } catch (error) {
+      console.error('❌ Failed to send admin email on open:', error.message);
+      throw error;
     }
   }
 }
