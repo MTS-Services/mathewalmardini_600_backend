@@ -22,6 +22,7 @@ console.log('===================================\n');
 const allowedOrigins = [
   'http://localhost:3000',
   'http://localhost:5173',
+  'http://localhost:5174',
   'https://b-spoke.com.au',
   'https://www.b-spoke.com.au',
   process.env.FRONTEND_URL

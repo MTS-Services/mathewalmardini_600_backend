@@ -22,7 +22,7 @@ model Consultation {
   bathroom        String
   message         String?
   preferredDate   String?
-  preferredTime   String
+  preferredTime   String?
   timeline        String?
   timelineDetails String?
   confirmed       Boolean  @default(false)

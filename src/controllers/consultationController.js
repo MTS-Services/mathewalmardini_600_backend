@@ -24,15 +24,14 @@ class ConsultationController {
         timelineDetails,
       } = req.body;
 
-      // Validate required fields (postcode, propertyType, timeline, timelineDetails, and message are optional)
+      // Validate required fields (postcode, propertyType, preferredDate, preferredTime, timeline, timelineDetails, and message are optional)
       if (
         !name ||
         !email ||
         !phone ||
         !address ||
         !service ||
-        !bathroom ||
-        !preferredTime
+        !bathroom
       ) {
         console.log("Validation Failed: Missing required fields");
         console.log("Name:", name);
@@ -41,12 +40,11 @@ class ConsultationController {
         console.log("Address:", address);
         console.log("Service:", service);
         console.log("Bathroom:", bathroom);
-        console.log("Preferred Time:", preferredTime);
 
         return res.status(400).json({
           success: false,
           message:
-            "All fields are required: name, email, phone, address, service, bathroom, and preferredTime",
+            "All fields are required: name, email, phone, address, service, and bathroom",
         });
       }
 
@@ -75,7 +73,7 @@ class ConsultationController {
         bathroom,
         message: message || "",
         preferredDate: preferredDate || "",
-        preferredTime,
+        preferredTime: preferredTime || null,
         timeline: timeline || "",
         timelineDetails: timelineDetails || "",
       };
@@ -132,6 +130,64 @@ class ConsultationController {
       res.status(500).json({
         success: false,
         message: "Failed to process consultation request",
+        error: error.message,
+      });
+    }
+  }
+
+  async locationSuggestions(req, res) {
+    console.log('GET /api/location-suggestions - Query:', req.query);
+
+    try {
+      const input = req.query.input || req.query.q;
+      if (!input || typeof input !== 'string' || !input.trim()) {
+        return res.status(400).json({
+          success: false,
+          message: 'Query parameter "input" is required.',
+        });
+      }
+
+      const apiKey = process.env.GOOGLE_API_KEY;
+      if (!apiKey) {
+        console.error('Google API key is not configured in environment variables.');
+        return res.status(500).json({
+          success: false,
+          message: 'Google API key is not configured.',
+        });
+      }
+
+      const encodedInput = encodeURIComponent(input.trim());
+      const url = `https://maps.googleapis.com/maps/api/place/autocomplete/json?input=${encodedInput}&components=country:au&types=geocode&language=en-AU&key=${apiKey}`;
+
+      console.log('Calling Google Places Autocomplete:', url.replace(apiKey, '***')); 
+      const response = await fetch(url);
+      const data = await response.json();
+
+      if (!response.ok || data.status !== 'OK') {
+        console.error('Google autocomplete error:', data);
+        return res.status(502).json({
+          success: false,
+          message: 'Failed to fetch location suggestions from Google.',
+          error: data.error_message || data.status,
+        });
+      }
+
+      const suggestions = (data.predictions || []).map((prediction) => ({
+        description: prediction.description,
+        placeId: prediction.place_id,
+        mainText: prediction.structured_formatting?.main_text || '',
+        secondaryText: prediction.structured_formatting?.secondary_text || '',
+      }));
+
+      return res.json({
+        success: true,
+        suggestions,
+      });
+    } catch (error) {
+      console.error('Location suggestions error:', error.message);
+      res.status(500).json({
+        success: false,
+        message: 'Server error fetching location suggestions.',
         error: error.message,
       });
     }
