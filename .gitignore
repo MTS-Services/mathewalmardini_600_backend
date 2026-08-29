@@ -1,3 +1,5 @@
 node_modules
 .getaibd
 .env
+.env.*
+!.env.example
