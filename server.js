@@ -2,6 +2,8 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const consultationRoutes = require('./src/routes/consultationRoutes');
+const bathroomSelectionRoutes = require('./src/routes/bathroomSelectionRoutes');
+const uploadRoutes = require('./src/routes/uploadRoutes');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -53,7 +55,11 @@ console.log('Body parser middleware configured\n');
 
 // Routes
 app.use('/api', consultationRoutes);
+app.use('/api', bathroomSelectionRoutes);
+app.use('/api', uploadRoutes);
 console.log('Consultation routes registered at /api');
+console.log('Bathroom selection routes registered at /api');
+console.log('Upload routes registered at /api');
 
 // Root route
 app.get('/', (req, res) => {

@@ -157,11 +157,19 @@ class ConsultationController {
       }
 
       const encodedInput = encodeURIComponent(input.trim());
-      const url = `https://maps.googleapis.com/maps/api/place/autocomplete/json?input=${encodedInput}&components=country:au&types=geocode&language=en-AU&key=${apiKey}`;
+      // Restrict autocomplete results to Australia only
+      const url = `https://maps.googleapis.com/maps/api/place/autocomplete/json?input=${encodedInput}&components=country:au&types=address&language=en-AU&key=${apiKey}`;
 
       console.log('Calling Google Places Autocomplete:', url.replace(apiKey, '***')); 
       const response = await fetch(url);
       const data = await response.json();
+
+      if (data.status === 'ZERO_RESULTS') {
+        return res.json({
+          success: true,
+          suggestions: [],
+        });
+      }
 
       if (!response.ok || data.status !== 'OK') {
         console.error('Google autocomplete error:', data);
