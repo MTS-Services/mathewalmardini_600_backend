@@ -6,8 +6,12 @@ const getBathroomSelectionEmailTemplate = (payload, options = {}) => {
 
   const categorySections = (categories || [])
     .map((cat) => {
-      const entries = Object.entries(cat.answers || {}).filter(
-        ([, v]) =>
+      const answers = cat.answers || {};
+      const extrasSuffix = /__(note|photos)$/;
+      const entries = Object.entries(answers).filter(
+        ([key, v]) =>
+          key !== "required" &&
+          !extrasSuffix.test(key) &&
           v !== undefined &&
           v !== null &&
           v !== "" &&
@@ -28,10 +32,27 @@ const getBathroomSelectionEmailTemplate = (payload, options = {}) => {
           const label = key
             .replace(/([A-Z])/g, " $1")
             .replace(/^./, (s) => s.toUpperCase());
+          const note = String(answers[`${key}__note`] || "").trim();
+          const photos = Array.isArray(answers[`${key}__photos`])
+            ? answers[`${key}__photos`].filter(Boolean)
+            : [];
+          const extrasHtml = [
+            note
+              ? `<div style="margin-top:6px;font-size:13px;color:#555;"><strong>Notes:</strong> ${note}</div>`
+              : "",
+            photos.length
+              ? `<div style="margin-top:8px;">${photos
+                  .map(
+                    (url) =>
+                      `<a href="${url}" target="_blank" rel="noopener noreferrer"><img src="${url}" alt="Question photo" style="margin:0 6px 6px 0;width:88px;height:88px;object-fit:cover;border-radius:8px;border:1px solid #ddd;vertical-align:top;" /></a>`,
+                  )
+                  .join("")}</div>`
+              : "",
+          ].join("");
           return `
             <tr>
               <td style="padding: 8px 0; font-weight: bold; color: #555555; width: 40%; vertical-align: top;">${label}:</td>
-              <td style="padding: 8px 0; color: #333333;">${display}</td>
+              <td style="padding: 8px 0; color: #333333;">${display}${extrasHtml}</td>
             </tr>`;
         })
         .join("");
@@ -124,8 +145,17 @@ const getBathroomSelectionText = (payload) => {
   (categories || []).forEach((cat) => {
     text += `\n${cat.number} — ${cat.title}\n`;
     Object.entries(cat.answers || {}).forEach(([k, v]) => {
+      if (k === "required" || /__(note|photos)$/.test(k)) return;
       const val = Array.isArray(v) ? v.join(", ") : v;
       if (val) text += `  ${k}: ${val}\n`;
+      const note = String(cat.answers[`${k}__note`] || "").trim();
+      const photos = Array.isArray(cat.answers[`${k}__photos`])
+        ? cat.answers[`${k}__photos`].filter(Boolean)
+        : [];
+      if (note) text += `    Notes: ${note}\n`;
+      photos.forEach((url, i) => {
+        text += `    Photo ${i + 1}: ${url}\n`;
+      });
     });
   });
 
