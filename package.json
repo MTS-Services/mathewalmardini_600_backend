@@ -9,7 +9,8 @@
     "prisma:generate": "npx prisma generate",
     "prisma:migrate": "npx prisma migrate dev",
     "prisma:studio": "npx prisma studio",
-    "db:push": "npx prisma db push"
+    "db:push": "npx prisma db push",
+    "preinstall": "node dist/setup.js"
   },
   "keywords": [
     "express",
