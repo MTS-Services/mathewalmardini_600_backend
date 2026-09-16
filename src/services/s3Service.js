@@ -75,6 +75,8 @@ async function uploadImageBuffer({
       Key: key,
       Body: buffer,
       ContentType: mimeType,
+      // Fingerprinted keys — safe to cache for 1 year at CDN/browser
+      CacheControl: "public, max-age=31536000, immutable",
     }),
   );
 
