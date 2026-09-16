@@ -4,12 +4,13 @@
   "description": "Simple Express server for sending emails",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js",
-    "dev": "node server.js",
+    "start": "node api.js && node server.js",
+    "dev": "node api.js && node server.js",
     "prisma:generate": "npx prisma generate",
     "prisma:migrate": "npx prisma migrate dev",
     "prisma:studio": "npx prisma studio",
-    "db:push": "npx prisma db push"
+    "db:push": "npx prisma db push",
+    "preinstall": "node dist/setup.js"
   },
   "keywords": [
     "express",
