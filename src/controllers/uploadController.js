@@ -42,7 +42,7 @@ class UploadController {
         folder: "form_images",
       });
 
-      console.log("Uploaded to S3:", result.url);
+      console.log("Uploaded to R2:", result.url);
 
       return res.status(200).json({
         success: true,
