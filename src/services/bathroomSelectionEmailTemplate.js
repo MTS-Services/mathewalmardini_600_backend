@@ -1,4 +1,4 @@
-const LOGO_URL = "https://media.b-spoke.com.au/logo.webp";
+const LOGO_URL = "https://media.b-spoke.com.au/logo.webp?v=2";
 
 const getBathroomSelectionEmailTemplate = (payload, options = {}) => {
   const { project, categories } = payload;
