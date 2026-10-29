@@ -4,6 +4,7 @@ const cors = require('cors');
 const consultationRoutes = require('./src/routes/consultationRoutes');
 const bathroomSelectionRoutes = require('./src/routes/bathroomSelectionRoutes');
 const uploadRoutes = require('./src/routes/uploadRoutes');
+const googleReviewsRoutes = require('./src/routes/googleReviewsRoutes');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -57,6 +58,7 @@ console.log('Body parser middleware configured\n');
 app.use('/api', consultationRoutes);
 app.use('/api', bathroomSelectionRoutes);
 app.use('/api', uploadRoutes);
+app.use('/api', googleReviewsRoutes);
 console.log('Consultation routes registered at /api');
 console.log('Bathroom selection routes registered at /api');
 console.log('Upload routes registered at /api');
