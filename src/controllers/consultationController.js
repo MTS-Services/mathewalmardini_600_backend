@@ -25,13 +25,15 @@ class ConsultationController {
       } = req.body;
 
       // Validate required fields (postcode, propertyType, preferredDate, preferredTime, timeline, timelineDetails, and message are optional)
+      // Bathroom count is only required when "Bathroom Renovation" is selected
+      const needsBathroom = String(service || "").includes("Bathroom Renovation");
       if (
         !name ||
         !email ||
         !phone ||
         !address ||
         !service ||
-        !bathroom
+        (needsBathroom && !bathroom)
       ) {
         console.log("Validation Failed: Missing required fields");
         console.log("Name:", name);
@@ -44,7 +46,7 @@ class ConsultationController {
         return res.status(400).json({
           success: false,
           message:
-            "All fields are required: name, email, phone, address, service, and bathroom",
+            "All fields are required: name, email, phone, address, service (and number of bathrooms for Bathroom Renovation)",
         });
       }
 
